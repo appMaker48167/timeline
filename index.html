@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Church Plant Launch Timeline Coach</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 1.5rem;
+      background: #f4f4f6;
+      color: #222;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 1.5rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 1.9rem;
+    }
+    h2 {
+      font-size: 1.35rem;
+      margin-top: 1.8rem;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.3rem;
+    }
+    p.description {
+      margin-top: 0.3rem;
+      color: #555;
+      font-size: 0.95rem;
+    }
+    fieldset {
+      border: none;
+      margin: 1rem 0 0.5rem;
+      padding: 0;
+    }
+    legend {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .scale-help {
+      font-size: 0.85rem;
+      color: #777;
+      margin-bottom: 0.4rem;
+    }
+    .option-row {
+      margin: 0.2rem 0;
+    }
+    label {
+      cursor: pointer;
+    }
+    .note-input {
+      width: 100%;
+      min-height: 60px;
+      margin-top: 0.4rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-family: inherit;
+      font-size: 0.9rem;
+      resize: vertical;
+    }
+    .launch-controls {
+      margin-top: 1.8rem;
+      padding: 1rem 1.2rem;
+      border-radius: 10px;
+      background: #f7f9ff;
+      border: 1px solid #dde5ff;
+    }
+    .launch-controls label {
+      font-size: 0.9rem;
+    }
+    .launch-controls input[type="date"] {
+      margin-top: 0.5rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+    button {
+      margin-top: 1.5rem;
+      padding: 0.6rem 1.4rem;
+      border-radius: 999px;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #1f7aec;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 4px 10px rgba(31,122,236,0.3);
+    }
+    button:hover {
+      filter: brightness(1.05);
+    }
+    #results {
+      margin-top: 2rem;
+      padding: 1rem 1.2rem;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+      background: #fafafa;
+    }
+    #results h3 {
+      margin-top: 0.8rem;
+      margin-bottom: 0.4rem;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .badge-ready {
+      background: #e3f6e8;
+      color: #256b36;
+    }
+    .badge-working {
+      background: #fff5d7;
+      color: #8a6b21;
+    }
+    .badge-early {
+      background: #ffe4e4;
+      color: #a03030;
+    }
+    .domain-list {
+      margin-top: 0.8rem;
+      padding-left: 1.1rem;
+      font-size: 0.95rem;
+    }
+    .error {
+      color: #b00020;
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    table.timeline {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+    }
+    table.timeline th, table.timeline td {
+      border-bottom: 1px solid #e2e2e2;
+      padding: 0.4rem 0.3rem;
+      vertical-align: top;
+    }
+    table.timeline th {
+      text-align: left;
+      font-weight: 600;
+    }
+    .muted {
+      color: #777;
+      font-size: 0.85rem;
+    }
+    .actions-row {
+      margin-top: 1.2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      align-items: center;
+    }
+    .secondary-button {
+      background: #e5e7eb;
+      color: #111827;
+      box-shadow: none;
+    }
+    .secondary-button:hover {
+      filter: brightness(0.98);
+    }
+    #emailSection {
+      margin-top: 1.5rem;
+      padding: 1rem 1.2rem;
+      border-radius: 10px;
+      background: #f7fff7;
+      border: 1px solid #d2f0d2;
+    }
+    #emailTo {
+      margin-top: 0.3rem;
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      max-width: 260px;
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+    #emailHint {
+      margin-top: 0.35rem;
+      font-size: 0.8rem;
+      color: #555;
+    }
+    @media (max-width: 640px) {
+      .container {
+        padding: 1.2rem 1rem;
+      }
+      table.timeline th, table.timeline td {
+        font-size: 0.85rem;
+      }
+      .actions-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Church Plant Launch Timeline Coach</h1>
+    <p class="description">
+      This tool helps planters estimate a healthy launch window and build a simple roadmap,
+      based on six key areas: people & place, team, funding, systems, sending church, and calendar.
+    </p>
+    <p class="description">
+      <strong>Scale used below:</strong> 0 = Not started, 1 = Just beginning,
+      2 = In progress, 3 = Mostly in place, 4 = Strong and launch-ready.
+    </p>
+
+    <form id="timeline-form">
+      <!-- 1. People & Place -->
+      <h2>1. People & Place (Context & Presence)</h2>
+      <p class="description">
+        Target people and place, living in the community, time on the ground,
+        understanding of demographics/psychographics, and potential meeting place.
+      </p>
+      <fieldset>
+        <legend>How ready are you in People & Place?</legend>
+        <div class="scale-help">0 = no clear people/place yet; 4 = deeply embedded and clear.</div>
+        <div class="option-row">
+          <label><input type="radio" name="context" value="0"> 0 – Still discerning people/place; not on the ground yet</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="context" value="1"> 1 – Some sense of target area; limited time on the ground</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="context" value="2"> 2 – Clear target; living in/near community; early survey work</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="context" value="3"> 3 – On the ground, well connected; likely meeting space in view</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="context" value="4"> 4 – Deep presence; strong relational network; meeting place secured</label>
+        </div>
+      </fieldset>
+      <textarea class="note-input" name="contextNotes"
+        placeholder="Notes: target area, time on the ground, meeting place options, survey insights."></textarea>
+
+      <!-- 2. Model & Team -->
+      <h2>2. Model & Team</h2>
+      <p class="description">
+        Planting model (launch large, house churches, missional communities, etc.) and
+        size/health of core team and leaders.
+      </p>
+      <fieldset>
+        <legend>How ready are you in Model & Team?</legend>
+        <div class="scale-help">0 = no defined model or team; 4 = clear model + strong core team.</div>
+        <div class="option-row">
+          <label><input type="radio" name="team" value="0"> 0 – No clear model; very few committed people</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="team" value="1"> 1 – Basic idea of model; a few interested people but not committed</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="team" value="2"> 2 – Defined model; small committed core; early leadership emerging</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="team" value="3"> 3 – Healthy core team; some shared leadership for key ministries</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="team" value="4"> 4 – Strong core team; multiple leaders sharing the load</label>
+        </div>
+      </fieldset>
+      <textarea class="note-input" name="teamNotes"
+        placeholder="Notes: planting model, core team size, key leaders, outreach plans."></textarea>
+
+      <!-- 3. Funding & Partners -->
+      <h2>3. Funding & Partners</h2>
+      <p class="description">
+        Fundraising (“war chest”), sending/supporting churches, denominational/network/associational partners,
+        and their commitments.
+      </p>
+      <fieldset>
+        <legend>How ready are you in Funding & Partners?</legend>
+        <div class="scale-help">0 = little or no funding; 4 = strong multi-year support plan.</div>
+        <div class="option-row">
+          <label><input type="radio" name="funding" value="0"> 0 – No significant funds raised; no formal partners yet</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="funding" value="1"> 1 – Some early gifts; a few verbal commitments, but not clear</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="funding" value="2"> 2 – Initial “war chest” built; some partners and small commitments</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="funding" value="3"> 3 – Solid base of support; written commitments for first years</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="funding" value="4"> 4 – Strong, diversified partners with multi-year commitments</label>
+        </div>
+      </fieldset>
+      <textarea class="note-input" name="fundingNotes"
+        placeholder="Notes: current war chest, partners, commitments (amounts/length), fundraising plans."></textarea>
+
+      <!-- 4. Systems, Budgets & Logistics -->
+      <h2>4. Systems, Budgets & Logistics</h2>
+      <p class="description">
+        Startup equipment, CapEx and operating budgets, legal/government documents, banking, policies, etc.
+      </p>
+      <fieldset>
+        <legend>How ready are you in Systems & Logistics?</legend>
+        <div class="scale-help">0 = nothing set up; 4 = systems, budgets, and documents are in place.</div>
+        <div class="option-row">
+          <label><input type="radio" name="systems" value="0"> 0 – No clear budgets or systems; no legal docs started</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="systems" value="1"> 1 – Rough budget ideas; some research on equipment and docs</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="systems" value="2"> 2 – Draft CapEx and operating budgets; initial equipment plan; legal docs in progress</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="systems" value="3"> 3 – Budgets mostly finalized; equipment/vendors identified; most docs in place</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="systems" value="4"> 4 – Budgets, systems, and legal/government docs fully in place</label>
+        </div>
+      </fieldset>
+      <textarea class="note-input" name="systemsNotes"
+        placeholder="Notes: equipment needs, purchase timelines, startup/operations budgets, legal status."></textarea>
+
+      <!-- 5. Sending Church Alignment -->
+      <h2>5. Sending Church Alignment</h2>
+      <p class="description">
+        Sending church’s vision and timeline, fiscal year, calendar considerations, and specific commitments.
+      </p>
+      <fieldset>
+        <legend>How aligned are you with your Sending Church?</legend>
+        <div class="scale-help">0 = no clear sending church; 4 = deep clarity, alignment, and written commitments.</div>
+        <div class="option-row">
+          <label><input type="radio" name="sending" value="0"> 0 – No sending church or very unclear relationship</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="sending" value="1"> 1 – A sending/sponsor church in mind but details unclear</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="sending" value="2"> 2 – Identified sending church; early conversations on timeline/support</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="sending" value="3"> 3 – Agreed timeline and general commitments; attention to their calendar and fiscal year</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="sending" value="4"> 4 – Strong partnership with written commitments and integrated planning</label>
+        </div>
+      </fieldset>
+      <textarea class="note-input" name="sendingNotes"
+        placeholder="Notes: sending church expectations, fiscal year, key events, formal commitments."></textarea>
+
+      <!-- 6. Life & Community Calendar -->
+      <h2>6. Life & Community Calendar</h2>
+      <p class="description">
+        Major family events and community/school calendar factors that impact a healthy launch window.
+      </p>
+      <fieldset>
+        <legend>How clear are you on Life & Community Calendar?</legend>
+        <div class="scale-help">0 = many unknowns/conflicts; 4 = very clear window with few major conflicts.</div>
+        <div class="option-row">
+          <label><input type="radio" name="calendar" value="0"> 0 – Many unknowns; several major events could conflict with launch</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="calendar" value="1"> 1 – Aware of some events but not planned around them yet</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="calendar" value="2"> 2 – Growing awareness of family/community calendar; rough launch window in mind</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="calendar" value="3"> 3 – Clearer launch window with most events accounted for</label>
+        </div>
+        <div class="option-row">
+          <label><input type="radio" name="calendar" value="4"> 4 – Strategic launch window chosen with minimal major conflicts</label>
+        </div>
+      </fieldset>
+      <textarea class="note-input" name="calendarNotes"
+        placeholder="Notes: upcoming family events (births, weddings, health), school calendars, festivals, etc."></textarea>
+
+      <!-- Launch date choice -->
+      <div class="launch-controls">
+        <strong>Launch Date Option</strong>
+        <p class="muted">
+          You can either let the tool suggest a launch date based on your score, or use a date you already have in mind.
+        </p>
+        <label>
+          <input type="checkbox" id="useCustomLaunch">
+          I already have a target launch date
+        </label>
+        <br>
+        <input type="date" id="customLaunchDate" disabled>
+      </div>
+
+      <button type="button" onclick="calculateTimeline()">Calculate Launch Timeline</button>
+      <div id="error" class="error"></div>
+    </form>
+
+    <div id="results" style="display:none;">
+      <div class="actions-row">
+        <button type="button" class="secondary-button" onclick="window.print()">Print this plan</button>
+      </div>
+
+      <h3>Readiness Summary</h3>
+      <p id="summary"></p>
+      <p id="scoreSummary"></p>
+
+      <h3>Launch Date & Window</h3>
+      <p id="launchSummary"></p>
+
+      <h3>Milestone Roadmap</h3>
+      <p class="muted">
+        These are suggested checkpoints working backward from the launch date. Use them as a coaching guide, not a legalistic checklist.
+      </p>
+      <div id="timelineContainer"></div>
+
+      <h3>Areas to Strengthen</h3>
+      <ul id="weakAreas" class="domain-list"></ul>
+
+      <h3>Coaching Notes (for your records)</h3>
+      <ul class="domain-list" id="notesList"></ul>
+
+      <div id="emailSection">
+        <h3>Email My Results</h3>
+        <p class="muted">
+          Enter your email (or your coach's). This will open your email program with a draft that already includes your results and roadmap.
+        </p>
+        <label for="emailTo">Send to (optional):</label><br>
+        <input type="email" id="emailTo" placeholder="you@example.com">
+        <div id="emailHint">
+          If you leave this blank, you'll still get a draft email — you can just add addresses there.
+        </div>
+        <button type="button" class="secondary-button" onclick="openEmailDraft()">Open email draft</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let lastEmailSummary = "";
+
+    function getScore(name) {
+      const checked = document.querySelector('input[name="' + name + '"]:checked');
+      if (!checked) return null;
+      return parseInt(checked.value, 10);
+    }
+
+    function formatDate(date) {
+      return date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+    }
+
+    function addWeeks(baseDate, weeks) {
+      const result = new Date(baseDate.getTime());
+      result.setDate(result.getDate() + weeks * 7);
+      return result;
+    }
+
+    function calculateTimeline() {
+      const domains = [
+        { key: "context", label: "People & Place (Context & Presence)" },
+        { key: "team", label: "Model & Team" },
+        { key: "funding", label: "Funding & Partners" },
+        { key: "systems", label: "Systems, Budgets & Logistics" },
+        { key: "sending", label: "Sending Church Alignment" },
+        { key: "calendar", label: "Life & Community Calendar" }
+      ];
+
+      let total = 0;
+      let missing = [];
+      let scores = {};
+
+      domains.forEach(d => {
+        const s = getScore(d.key);
+        if (s === null) {
+          missing.push(d.label);
+        } else {
+          scores[d.key] = s;
+          total += s;
+        }
+      });
+
+      const errorDiv = document.getElementById("error");
+      if (missing.length > 0) {
+        errorDiv.textContent = "Please score all areas before calculating: " + missing.join(", ");
+        document.getElementById("results").style.display = "none";
+        return;
+      } else {
+        errorDiv.textContent = "";
+      }
+
+      // Determine recommended timeline (months to launch) based on total score
+      let months;
+      let readinessText;
+      let badgeClass;
+      let badgeText;
+
+      // Max total = 6 * 4 = 24
+      if (total <= 8) {
+        months = 21; // 18–24, midpoint
+        readinessText = "You are likely more than 18–24 months away from a healthy public launch. Focus this season on discernment, presence in the community, and building a core team.";
+        badgeClass = "badge-early";
+        badgeText = "Early Stage (Pre-Launch)";
+      } else if (total <= 12) {
+        months = 15; // 12–18
+        readinessText = "You may be around 12–18 months from launch. Keep deepening relationships, clarifying your model, and building a sustainable support base.";
+        badgeClass = "badge-working";
+        badgeText = "Building Foundation";
+      } else if (total <= 16) {
+        months = 10; // 9–12
+        readinessText = "You may be roughly 9–12 months from launch. With intentional work on weaker areas, you can move toward setting a specific launch date.";
+        badgeClass = "badge-working";
+        badgeText = "Mid-Range Launch Window";
+      } else if (total <= 20) {
+        months = 7; // 6–9
+        readinessText = "You may be 6–9 months from launch. You’re entering a season where specific launch planning, team training, and outreach rhythms become crucial.";
+        badgeClass = "badge-ready";
+        badgeText = "Approaching Launch";
+      } else {
+        months = 4; // 3–6
+        readinessText = "You may be 3–6 months from a healthy launch, assuming continued momentum. This is a great time to clarify your launch date, team roles, and outreach plan.";
+        badgeClass = "badge-ready";
+        badgeText = "Launch-Ready Window";
+      }
+
+      // Launch date: either custom or suggested
+      const useCustom = document.getElementById("useCustomLaunch").checked;
+      const customInput = document.getElementById("customLaunchDate");
+      let launchDate;
+      let launchMessage = "";
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (useCustom) {
+        if (!customInput.value) {
+          errorDiv.textContent = "You checked that you have a launch date—please select it, or uncheck the box.";
+          document.getElementById("results").style.display = "none";
+          return;
+        }
+        launchDate = new Date(customInput.value + "T00:00:00");
+        if (launchDate < today) {
+          errorDiv.textContent = "The launch date you selected is in the past. Please choose a future date or uncheck the custom date box.";
+          document.getElementById("results").style.display = "none";
+          return;
+        }
+        launchMessage = "Using your chosen launch date of <strong>" + formatDate(launchDate) + "</strong>.";
+      } else {
+        launchDate = new Date(today.getTime());
+        launchDate.setMonth(launchDate.getMonth() + months);
+        launchMessage =
+          "Based on your readiness score, a reasonable launch window is about <strong>" + months +
+          " months</strong> from now. As a starting point, this tool suggests a launch around <strong>" +
+          formatDate(launchDate) + "</strong>. Adjust as needed for your context and calendar.";
+      }
+
+      // Identify weaker areas (score 0–2)
+      const weakAreas = domains.filter(d => scores[d.key] <= 2);
+
+      const summaryEl = document.getElementById("summary");
+      const scoreSummaryEl = document.getElementById("scoreSummary");
+      const launchSummaryEl = document.getElementById("launchSummary");
+      const weakAreasEl = document.getElementById("weakAreas");
+      const notesListEl = document.getElementById("notesList");
+      const timelineContainer = document.getElementById("timelineContainer");
+
+      summaryEl.innerHTML =
+        '<span class="badge ' + badgeClass + '">' + badgeText + '</span> ' +
+        '<span style="margin-left:0.4rem;">' + readinessText + '</span>';
+
+      scoreSummaryEl.textContent =
+        "Total readiness score: " + total + " out of 24 (higher scores suggest a nearer launch window).";
+
+      launchSummaryEl.innerHTML = launchMessage +
+        ' <span class="muted">(this is a coaching tool, not a prophetic word—adjust with your sending church and mentors).</span>';
+
+      // Weak areas list
+      weakAreasEl.innerHTML = "";
+      if (weakAreas.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "No major weak areas flagged by this tool. Use your coaching wisdom and local context as the final guide.";
+        weakAreasEl.appendChild(li);
+      } else {
+        weakAreas.forEach(d => {
+          const li = document.createElement("li");
+          li.textContent = d.label + " (score: " + scores[d.key] + ")";
+          weakAreasEl.appendChild(li);
+        });
+      }
+
+      // Notes list
+      notesListEl.innerHTML = "";
+      let notesSummaryLines = [];
+      domains.forEach(d => {
+        const textarea = document.querySelector('textarea[name="' + d.key + 'Notes"]');
+        const notes = textarea && textarea.value.trim();
+        const lineText = d.label + " – " + (notes || "No notes recorded.");
+        const li = document.createElement("li");
+        li.textContent = lineText;
+        notesListEl.appendChild(li);
+        notesSummaryLines.push(lineText);
+      });
+
+      // Build milestone roadmap
+      const milestones = [
+        {
+          label: "Launch Sunday",
+          weeksFromLaunch: 0,
+          description: "Public worship launch with clear next steps for guests and clear roles for core team."
+        },
+        {
+          label: "Final volunteer training & full systems run-through",
+          weeksFromLaunch: -4,
+          description: "Train volunteers, run through a full Sunday, stress-test kids, first impressions, worship, and teardown."
+        },
+        {
+          label: "Second preview service",
+          weeksFromLaunch: -8,
+          description: "Invite-heavy preview with follow-up systems in place. Debrief with core team and adjust."
+        },
+        {
+          label: "First preview service",
+          weeksFromLaunch: -12,
+          description: "Soft launch with core team and friends of the plant. Capture lessons and refine systems."
+        },
+        {
+          label: "Outreach push & community presence ramp-up",
+          weeksFromLaunch: -16,
+          description: "Neighborhood events, school partnerships, canvassing, and relational evangelism in target area."
+        },
+        {
+          label: "Finalize equipment & operational budgets",
+          weeksFromLaunch: -20,
+          description: "Purchase key equipment, finalize startup (CapEx) and operating budgets, and clarify Sunday systems."
+        },
+        {
+          label: "Weekly core team gatherings & leadership development",
+          weeksFromLaunch: -24,
+          description: "Gather core regularly for vision, DNA, evangelism training, prayer, and leadership development."
+        },
+        {
+          label: "Clarify sending church commitments & key partners",
+          weeksFromLaunch: -32,
+          description: "Confirm written commitments, clarify expectations, and sync calendars with sending and partner churches."
+        },
+        {
+          label: "Discernment & deepening presence on the ground",
+          weeksFromLaunch: -40,
+          description: "Increase time in the community, listen, learn, and refine clarity around people, place, and model."
+        }
+      ];
+
+      // Build HTML table for milestones + collect for email summary
+      const table = document.createElement("table");
+      table.className = "timeline";
+      const thead = document.createElement("thead");
+      thead.innerHTML = "<tr><th style='width:25%'>Date</th><th style='width:20%'>Checkpoint</th><th>Focus</th></tr>";
+      table.appendChild(thead);
+
+      const tbody = document.createElement("tbody");
+      let milestoneSummaryLines = [];
+
+      milestones
+        .sort((a, b) => a.weeksFromLaunch - b.weeksFromLaunch) // furthest out first
+        .forEach(m => {
+          const row = document.createElement("tr");
+          const date = addWeeks(launchDate, m.weeksFromLaunch);
+
+          const dateCell = document.createElement("td");
+          dateCell.textContent = formatDate(date);
+
+          const labelCell = document.createElement("td");
+          labelCell.textContent = m.label;
+
+          const descCell = document.createElement("td");
+          let extra = [];
+
+          if (scores.context <= 2 && m.weeksFromLaunch <= -24) {
+            extra.push("Increase time on the ground and deepen relationships in your target community.");
+          }
+          if (scores.team <= 2 && m.weeksFromLaunch <= -20) {
+            extra.push("Prioritize recruiting and discipling core team members and early leaders.");
+          }
+          if (scores.funding <= 2 && m.weeksFromLaunch <= -20) {
+            extra.push("Schedule partner meetings and move informal interest toward written support commitments.");
+          }
+          if (scores.systems <= 2 && m.weeksFromLaunch <= -16) {
+            extra.push("Work on budgets, kids safety policies, banking, and equipment spreadsheets.");
+          }
+          if (scores.sending <= 2 && m.weeksFromLaunch <= -32) {
+            extra.push("Clarify expectations, timelines, and communication rhythms with your sending church.");
+          }
+          if (scores.calendar <= 2 && m.weeksFromLaunch <= -16) {
+            extra.push("Double-check family and community calendars; adjust events to avoid overload.");
+          }
+
+          const fullDesc = m.description + (extra.length ? " " + extra.join(" ") : "");
+          descCell.textContent = fullDesc;
+
+          row.appendChild(dateCell);
+          row.appendChild(labelCell);
+          row.appendChild(descCell);
+          tbody.appendChild(row);
+
+          milestoneSummaryLines.push(formatDate(date) + " – " + m.label + ": " + fullDesc);
+        });
+
+      table.appendChild(tbody);
+
+      timelineContainer.innerHTML = "";
+      timelineContainer.appendChild(table);
+
+      // Build email summary
+      let summaryLines = [];
+      summaryLines.push("Church Plant Launch Timeline Results");
+      summaryLines.push("");
+      summaryLines.push("Total readiness score: " + total + " / 24");
+      summaryLines.push("Readiness band: " + badgeText);
+      summaryLines.push("");
+      summaryLines.push("Readiness Summary:");
+      summaryLines.push(readinessText);
+      summaryLines.push("");
+
+      if (useCustom) {
+        summaryLines.push("Launch date (chosen): " + formatDate(launchDate));
+      } else {
+        summaryLines.push("Launch date (suggested): " + formatDate(launchDate) +
+          " (about " + months + " months from today)");
+      }
+      summaryLines.push("");
+
+      if (weakAreas.length === 0) {
+        summaryLines.push("Areas to strengthen: No major weak areas flagged by this tool.");
+      } else {
+        summaryLines.push("Areas to strengthen:");
+        weakAreas.forEach(d => {
+          summaryLines.push("- " + d.label + " (score: " + scores[d.key] + ")");
+        });
+      }
+
+      summaryLines.push("");
+      summaryLines.push("Coaching Notes:");
+      notesSummaryLines.forEach(line => summaryLines.push("- " + line));
+
+      summaryLines.push("");
+      summaryLines.push("Milestone Roadmap:");
+      milestoneSummaryLines.forEach(line => summaryLines.push("- " + line));
+
+      lastEmailSummary = summaryLines.join("\n");
+
+      document.getElementById("results").style.display = "block";
+    }
+
+    function openEmailDraft() {
+      if (!lastEmailSummary) {
+        alert("Please calculate your launch timeline before emailing your results.");
+        return;
+      }
+
+      const to = document.getElementById("emailTo").value.trim();
+      const subject = "Church Plant Launch Timeline Results";
+      const body = lastEmailSummary;
+
+      const toPart = to ? encodeURIComponent(to) : "";
+      const mailto = "mailto:" + toPart +
+        "?subject=" + encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(body);
+
+      window.location.href = mailto;
+    }
+
+    // Enable/disable custom date input when checkbox is toggled
+    document.addEventListener("DOMContentLoaded", function () {
+      const checkbox = document.getElementById("useCustomLaunch");
+      const dateInput = document.getElementById("customLaunchDate");
+      checkbox.addEventListener("change", function () {
+        dateInput.disabled = !checkbox.checked;
+        if (!checkbox.checked) {
+          dateInput.value = "";
+        }
+      });
+    });
+  </script>
+</body>
+</html>
